@@ -27,6 +27,7 @@
 
     methods: {
       fetchData() {
+        // { headers: { Authorization: "AuthStr" } }
         axios.get('https://api.coinmarketcap.com/v1/ticker/'+this.$route.params.id+'/')
         .then((resp) => {
           this.coin = resp.data[0]

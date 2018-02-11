@@ -14,9 +14,11 @@
   import Papa from 'papaparse'
   import Vue from 'vue'
   import VueSweetalert2 from 'vue-sweetalert2';
- 
+  import axios from 'axios'
+
   Vue.use(VueSweetalert2);
   var allDataCorrect = true; // Flag
+  var finalFormattedData = [];
   export default {
     name: 'Hello',
     data () {
@@ -41,7 +43,6 @@
             var parsed = Papa.parse(file, {
                 download: true,
                 header: true,
-                skipEmptyLines : true,
                 step: function(row, parser){
                     if (true) { //Only chek if flag is not set, i.e, for the first time
                         parser.pause(); // pause the parser
@@ -60,8 +61,9 @@
                                 allDataCorrect = false;
                                 parser.abort();
                                 vm.image = '';
-                                                        debugger;
-
+                            }
+                            else{
+                                finalFormattedData.push({id:id, name:name});
                             }
                             parser.resume();
                         } else{
@@ -74,25 +76,44 @@
                             allDataCorrect = false;
                             parser.abort();
                             vm.image = '';
-                                                    debugger;
-
                         }
                     } 
                 },              
                 complete: function(results, file) {
                     if(allDataCorrect){
-                        console.log(results.data);
-                        vm.image = results.data;
-                        vm.showDataParseSuccess();
+                        console.log(finalFormattedData);
+                        vm.image = finalFormattedData;
+                        vm.showDataParseSuccess(finalFormattedData);
                     }
                 }
+            });
+        },
+        postData(data) {
+            debugger;
+            var headers = {
+                'Content-Type': 'application/json',
+                'Authorization': 3
+            };
+            axios({ method: 'get', 
+                    url: 'http://rnjailamba.pythonanywhere.com/products/', 
+                    headers: { 'Authorization': 'Token bc9514f0892368cfd0ea792a977aff55d53e3634' } });
+
+
+            axios.post("http://rnjailamba.pythonanywhere.com/products/", JSON.stringify(data), {
+                headers: { Authorization: 'Token bc9514f0892368cfd0ea792a977aff55d53e3634', 'Content-Type': 'application/json' }
+            })
+            .then((response) => {
+                dispatch({type: FOUND_USER, data: response.data[0]})
+            })
+            .catch((error) => {
+                dispatch({type: ERROR_FINDING_USER})
             });
         },
         removeImage: function (e) {
             this.image = '';
             allDataCorrect = false;
         },
-        showDataParseSuccess: function(e){
+        showDataParseSuccess: function(data){
             Vue.swal({
                 title: 'The file passed all checks.',
                 text: "Do you want to upload this file?",
@@ -104,10 +125,12 @@
                 }).then((result) => {
                     if (result.value) {
                         Vue.swal(
-                        'Uploaded!',
-                        'Your file has been uploaded.',
-                        'success'
+                            'Uploaded!',
+                            'Your file has been uploaded.',
+                            'success'
                         )
+                        debugger;
+                        this.postData(data);
                     }
             });            
         }
