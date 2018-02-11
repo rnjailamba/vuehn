@@ -25,7 +25,6 @@
         image: ''
       }
     },
-    el: '#app',
     methods: {
         onFileChange(e) {
             var files = e.target.files || e.dataTransfer.files;
