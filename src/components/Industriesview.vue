@@ -11,53 +11,32 @@
 <script >
     import Item from './Industriesitem.vue';
     import Vue from 'vue'
+    import axios from 'axios'
     Vue.component('Item', Item);
-
-    var data = {
-        name: 'Industries',
-        children: [{
-                "id": "11",
-                "name": "Agricultura",
-                "children": [{
-                    "id": "111",
-                    "name": "Siembra de soya",
-                    "children": [{
-                        "id": "1111",
-                        "name": "Siembra de soya"
-                    }]
-                }]
-            }, {
-                "id": "97",
-                "name": "Otros",
-                "children": [{
-                    "id": "971",
-                    "name": "Otros perecederos"
-                }, {
-                    "id": "972",
-                    "name": "Otros servicios",
-                    "children": [{
-                        "id": "9721",
-                        "name": "Servicios varios"
-                    }]
-                }]
-            }
-        
-        ]
-    }
-
-
+    var data = []
     export default {
         components: {
             'item': Item
         },
         data () {
             return {
-                treeData: data
+                treeData: {"name":"industries"}
             }
-        },        
+        }, 
+        created() {
+            this.fetchData()
+        },       
         methods: {
-            hide: function() {
-                
+            fetchData() {
+                axios.get('https://drfbackend.herokuapp.com/industries/')
+                .then((resp) => {     
+                    this.treeData = {};
+                    this.treeData["name"] = "industries";
+                    this.treeData["children"] = resp.data["industries"];
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
             }
         }
     }
