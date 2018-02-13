@@ -45,7 +45,7 @@
                 }
             },
             openIndustryPage: function (id) {
-                Router.push({ name: 'Industry', params: { id: 'bitcoin' }})
+                Router.push({ name: 'Industry', params: { id: id }})
             },
             changeType: function () {
                 if (!this.isFolder) {
