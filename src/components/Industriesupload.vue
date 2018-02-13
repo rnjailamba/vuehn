@@ -16,6 +16,9 @@
   import VueSweetalert2 from 'vue-sweetalert2';
   import axios from 'axios'
 
+  var base_url = "http://127.0.0.1:8000/industries/upload";
+  var base_url = "https://drfbackend.herokuapp.com/industries/upload";
+
   Vue.use(VueSweetalert2);
   var allDataCorrect = true; // Flag
   var finalFormattedData = [];
@@ -89,18 +92,22 @@
             });
         },
         postData(data) {
-            debugger;
             var headers = {
                 'Content-Type': 'application/json',
                 'Authorization': 3
             };
-            axios({ method: 'get', 
-                    url: 'http://rnjailamba.pythonanywhere.com/products/', 
-                    headers: { 'Authorization': 'Token bc9514f0892368cfd0ea792a977aff55d53e3634' } });
+            // axios({ method: 'get', 
+            //         url: 'http://rnjailamba.pythonanywhere.com/products/', 
+            //         headers: { 'Authorization': 'Token bc9514f0892368cfd0ea792a977aff55d53e3634' } });
 
 
-            axios.post("http://rnjailamba.pythonanywhere.com/products/", JSON.stringify(data), {
-                headers: { Authorization: 'Token bc9514f0892368cfd0ea792a977aff55d53e3634', 'Content-Type': 'application/json' }
+            axios.post(base_url, JSON.stringify(data) 
+                ,{
+                headers: 
+                {}
+                // { Authorization: 'Token bc9514f0892368cfd0ea792a977aff55d53e3634', 
+                // 'Content-Type': 'application/json' 
+                // }
             })
             .then((response) => {
                 dispatch({type: FOUND_USER, data: response.data[0]})
@@ -129,7 +136,6 @@
                             'Your file has been uploaded.',
                             'success'
                         )
-                        debugger;
                         this.postData(data);
                     }
             });            

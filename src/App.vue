@@ -2,9 +2,6 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <router-link :to="{ name: 'Hello' }">Home</router-link>
-    <router-link to="/about">About</router-link>
-    <router-link to="/coins/ethereum">Ethereum</router-link>
-    <router-link to="/coins/bitcoin">Bitcoin</router-link>    
     <router-link to="/industriesupload">Upload Industries</router-link>    
     <router-link to="/industriesview">View All Industries</router-link>    
     <router-view/>

@@ -23,6 +23,9 @@
                 treeData: {"name":"industries"}
             }
         }, 
+         watch: {
+            '$route': 'fetchData'
+        },
         created() {
             this.fetchData()
         },       
