@@ -83,7 +83,6 @@
                                 //some key is missing, abort parsing
                                 Vue.swal(
                                     'Incorrect Format!',
-                                    'The header must have id|name or id,name.',
                                     'error'
                                 )
                                 vm.incorrectCSV();
