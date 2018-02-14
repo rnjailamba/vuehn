@@ -56,39 +56,38 @@
                     download: true,
                     header: true,
                     step: function(row, parser) {
-                        if (true) { //Only chek if flag is not set, i.e, for the first time
-                            parser.pause(); // pause the parser
-                            var first_row_data = row.data[0];
-                            // Now check object keys, if it match
-                            if (('id' in first_row_data) && ('name' in first_row_data)) {
-                                //every required key is present
-                                var id = first_row_data['id'];
-                                var name = first_row_data['name'];
-                                if (isNaN(id) || typeof name != 'string') {
-                                    Vue.swal(
-                                        'Incorrect Data!',
-                                        'The id column must be number and name column string.',
-                                        'error'
-                                    )
-                                    vm.incorrectCSV();
-                                    parser.abort();
-                                } else {
-                                    finalFormattedData.push({
-                                        id: id,
-                                        name: name
-                                    });
-                                }
-                                parser.resume();
-                            } else {
-                                //some key is missing, abort parsing
+                        parser.pause(); // pause the parser
+                        var first_row_data = row.data[0];
+                        // Now check object keys, if it match
+                        if (('id' in first_row_data) && ('name' in first_row_data)) {
+                            //every required key is present
+                            var id = first_row_data['id'];
+                            var name = first_row_data['name'];
+                            if (isNaN(id) || typeof name != 'string') {
                                 Vue.swal(
-                                    'Incorrect Format!',
+                                    'Incorrect Data!',
+                                    'The id column must be number and name column string.',
                                     'error'
                                 )
                                 vm.incorrectCSV();
                                 parser.abort();
+                            } else {
+                                finalFormattedData.push({
+                                    id: id,
+                                    name: name
+                                });
                             }
-                        }
+                            parser.resume();
+                        } else {
+                            //some key is missing, abort parsing
+                            Vue.swal(
+                                'Incorrect Format!',
+                                'error'
+                            )
+                            vm.incorrectCSV();
+                            parser.abort();
+                        }                            
+                        
                     },
                     complete: function(results, file) {
                         if (allDataCorrect) {
