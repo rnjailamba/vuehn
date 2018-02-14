@@ -33,7 +33,7 @@
                 treeData: {
                     "name": "industries"
                 },
-                msg: "All Industries Data"
+                msg: "All Industries Data [Click on any child industry to simulate industry/xyz api and view the subtree]"
             }
         },
         created() {
