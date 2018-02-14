@@ -1,11 +1,14 @@
 <template>
-    <ul id="demo">
-        <h1>{{msg}}</h1>
-        <item
-            class="item"
-            :model="treeData">
-        </item>
-    </ul>
+    <div id="test">
+        <h2>{{msg}}</h2>
+        <button v-on:click="deleteIndustries">Delete all data</button>
+        <ul id="demo">
+            <item
+                class="item"
+                :model="treeData">
+            </item>
+        </ul>
+    </div>
 </template>
 
 <!-- item template -->
@@ -19,6 +22,7 @@
     Vue.use(VueSweetalert2);
     Vue.component('Item', Item);
     var data = []
+    var base_url = 'https://drfbackend.herokuapp.com/industries/';
 
     export default {
         components: {
@@ -34,7 +38,7 @@
         },
         created() {
             if (!localStorage.getItem('token')) {
-                Vue.swal('Please Login to upload!');
+                Vue.swal('Please Login to view!');
                 Router.push({
                     name: 'Login'
                 })
@@ -43,7 +47,7 @@
         },
         methods: {
             fetchData() {
-                axios.get('https://drfbackend.herokuapp.com/industries/',{
+                axios.get(base_url,{
                         headers: { 'Authorization': 'Token ' + localStorage.getItem('token') }})                
                     .then((resp) => {
                         this.treeData = {};
@@ -52,8 +56,29 @@
                     })
                     .catch((err) => {
                         Vue.swal('Error!', 'This is our fault, will get fixed soon..', 'error');
+                    })              
+            },
+            deleteIndustries() {
+                axios.delete(base_url+'delete', {
+                        headers: 
+                        { 
+                            Authorization: 'Token ' + localStorage.getItem('token') 
+                        }
                     })
-            }
+                    .then((response) => {
+                        Vue.swal(
+                            'Deleted!',
+                            'All data has been deleted.',
+                            'success'
+                        )
+                        this.treeData = {
+                            "name": "industries"
+                        }
+                    })
+                    .catch((error) => {
+                        Vue.swal('Error!', 'This is our fault, will get fixed soon..', 'error');
+                    });            
+            }            
         }
     }
 </script>
@@ -76,5 +101,16 @@
         padding-left: 1em;
         line-height: 1.5em;
         list-style-type: dot;
+    }
+    #test {
+        width: 330px;        
+    }
+    h2 {
+        margin-right: 0;
+        display: inline-block;
+    }
+    button {
+        float: right;
+        margin-top: 25px;
     }
 </style>

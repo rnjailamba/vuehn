@@ -1,7 +1,7 @@
 <template>
-    <div id="app">
+    <div id="">
         <div v-if="!CSV">
-            <h2>Select an CSV file</h2>
+            <h2>Select a CSV file</h2>
             <input type="file" @change="onFileChange">
         </div>
         <div v-else>

@@ -1,6 +1,5 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
     <form id="form" v-on:submit.prevent="addUser" v-show="!authenticated">
       <input type="text" v-model="newUser.name" placeholder="Username">
       <input type="text" v-model="newUser.description" placeholder="Description">
@@ -39,7 +38,6 @@
         },
         created() {
             if (localStorage.getItem('token')){
-                console.log(localStorage.getItem('token'));
                 this.authenticated = true;
             }
                 

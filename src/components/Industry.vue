@@ -1,6 +1,6 @@
 <template>
     <ul id="demo">
-        <h1>{{msg}}</h1>
+        <h2>{{msg}}</h2>
         <item
             class="item"
             :model="treeData">
@@ -37,7 +37,7 @@
         },
         created() {
             if (!localStorage.getItem('token')) {
-                Vue.swal('Please Login to upload!');
+                Vue.swal('Please Login to view!');
                 Router.push({
                     name: 'Login'
                 })
