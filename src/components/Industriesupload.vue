@@ -48,9 +48,9 @@
                     Vue.swal('Sorry, thats not a valid CSV file');
                     return;
                 }
-                this.createCSV(files[0]);
+                this.checkCSV(files[0]);
             },
-            createCSV(file) {
+            checkCSV(file) {
                 var vm = this;
                 var parsed = Papa.parse(file, {
                     download: true,
@@ -95,10 +95,59 @@
                         if (allDataCorrect) {
                             console.log(finalFormattedData);
                             vm.CSV = finalFormattedData;
-                            vm.showDataParseSuccess(finalFormattedData);             
+                            vm.showDataParseSuccess(finalFormattedData, file);  
                         }
                     }
                 });
+            },
+            removeCSV: function(e) {
+                this.CSV = '';
+                allDataCorrect = true;
+                finalFormattedData = [];
+            },
+            incorrectCSV:function(e){
+                this.CSV = 'Incorrect format';
+                allDataCorrect = false;
+                finalFormattedData = [];
+            },
+            showDataParseSuccess: function(data, file) {
+                Vue.swal({
+                    title: 'The file passed all checks.',
+                    text: "Do you want to upload this file?",
+                    type: 'success',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, upload it!'
+                }).then((result) => {
+                    if (result.value) {
+                        // this.postData(data);
+                        this.postDataAsFile(file);
+                    }
+                    finalFormattedData = [];
+                });
+            },
+            postDataAsFile(file){
+                var csvFile = file;
+                var formdata = new FormData();
+                formdata.append('file_upload', csvFile);
+                axios.post("http://127.0.0.1:8000/industries/uploadd", formdata, {
+                    headers: {
+                        Authorization: 'Token ' + localStorage.getItem('token')
+                    }
+                })
+                .then((response) => {
+                    this.removeCSV();
+                    Vue.swal(
+                        'Uploaded!',
+                        'Your file has been uploaded.',
+                        'success'
+                    )
+                })
+                .catch((error) => {
+                    this.incorrectCSV();
+                    Vue.swal('Error!', 'This is our fault, will get fixed soon..', 'error');
+                });                                
             },
             postData(data) {
                 axios.post(base_url, JSON.stringify(data), {
@@ -114,37 +163,13 @@
                             'Your file has been uploaded.',
                             'success'
                         )
+                        vm.removeCSV();
                     })
                     .catch((error) => {
+                        vm.incorrectCSV();
                         Vue.swal('Error!', 'This is our fault, will get fixed soon..', 'error');
                     });
-            },
-            removeCSV: function(e) {
-                this.CSV = '';
-                allDataCorrect = true;
-                finalFormattedData = [];
-            },
-            incorrectCSV:function(e){
-                this.CSV = 'Incorrect format';
-                allDataCorrect = false;
-                finalFormattedData = [];
-            },
-            showDataParseSuccess: function(data) {
-                Vue.swal({
-                    title: 'The file passed all checks.',
-                    text: "Do you want to upload this file?",
-                    type: 'success',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, upload it!'
-                }).then((result) => {
-                    if (result.value) {
-                        this.postData(data);
-                    }
-                    finalFormattedData = [];
-                });
-            }
+            }         
         }
     }
 </script>
