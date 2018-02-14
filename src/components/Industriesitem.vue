@@ -27,34 +27,39 @@
         props: {
             model: Object
         },
-        data: function () {
+        data: function() {
             return {
                 open: false
             }
         },
         computed: {
-            isFolder: function () {
-            return this.model.children &&
-                this.model.children.length
+            isFolder: function() {
+                return this.model.children &&
+                    this.model.children.length
             }
         },
         methods: {
-            toggle: function () {
+            toggle: function() {
                 if (this.isFolder) {
                     this.open = !this.open
                 }
             },
-            openIndustryPage: function (id) {
-                Router.push({ name: 'Industry', params: { id: id }})
+            openIndustryPage: function(id) {
+                Router.push({
+                    name: 'Industry',
+                    params: {
+                        id: id
+                    }
+                })
             },
-            changeType: function () {
+            changeType: function() {
                 if (!this.isFolder) {
                     Vue.set(this.model, 'children', [])
                     this.addChild()
                     this.open = true
                 }
             },
-            addChild: function () {
+            addChild: function() {
                 this.model.children.push({
                     name: 'new stuff'
                 })
@@ -68,15 +73,18 @@
         font-family: Menlo, Consolas, monospace;
         color: #444;
     }
+
     .item {
-        cursor: pointer;        
+        cursor: pointer;
     }
+
     .bold {
         font-weight: bold;
     }
+
     ul {
         padding-left: 1em;
         line-height: 1.5em;
         list-style-type: dot;
     }
- </style> 
+</style>
