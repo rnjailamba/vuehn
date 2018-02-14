@@ -5,7 +5,7 @@
             <input type="file" @change="onFileChange">
         </div>
         <div v-else>
-            <button @click="removeCSV">Remove CSV file</button>
+            <button @click="removeCSV">Upload another CSV file</button>
         </div>
     </div>
 </template>
