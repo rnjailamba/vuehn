@@ -18,8 +18,8 @@
     import Router from '../router';
 
     Vue.use(VueSweetalert2);
-    var base_url = "https://drfbackend.herokuapp.com/industries/upload";
     // var base_url = "http://127.0.0.1:8000/industries/upload";
+    var base_url = "https://drfbackend.herokuapp.com/industries/upload";    
     var allDataCorrect = true; // Flag
     var finalFormattedData = [];
 
@@ -131,7 +131,7 @@
                 var csvFile = file;
                 var formdata = new FormData();
                 formdata.append('file_upload', csvFile);
-                axios.post("http://127.0.0.1:8000/industries/uploadd", formdata, {
+                axios.post(base_url, formdata, {
                     headers: {
                         Authorization: 'Token ' + localStorage.getItem('token')
                     }
