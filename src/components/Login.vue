@@ -3,9 +3,9 @@
     <form id="form" v-on:submit.prevent="addUser" v-show="!authenticated">
       <input type="text" v-model="newUser.name" placeholder="Username">
       <input type="text" v-model="newUser.description" placeholder="Description">
-      <input type="submit" value="Add User">
+      <input type="submit" value="Login">
     </form>
-    <ul class="errors" v-show="!authenticated">
+    <ul class="errors" v-show="!authenticated && loginClick">
       <li v-show="!validation.name">Name cannot be empty.</li>
       <li v-show="!validation.description">Please provide a valid description.</li>
     </ul>
@@ -33,7 +33,8 @@
                     name: '',
                     description: '',
                 },
-                authenticated: false
+                authenticated: false,
+                loginClick: false
             }
         },
         created() {
@@ -60,6 +61,7 @@
         methods: {
             addUser: function() {
                 if (this.isValid) {
+                    this.loginClick = false;
                     axios.post(base_url, JSON.stringify(this.newUser), {
                             headers: {
                                 'Content-Type': 'application/json'
@@ -75,6 +77,9 @@
                         });
                     this.newUser.name = ''
                     this.newUser.description = ''
+                }
+                else{
+                    this.loginClick = true;
                 }
             },
             logout: function() {
