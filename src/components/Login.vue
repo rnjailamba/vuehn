@@ -23,6 +23,7 @@
 
     Vue.use(VueSweetalert2);
     var base_url = "https://drfbackend.herokuapp.com/apps/register/";
+    // var base_url = "http://127.0.0.1:8000/apps/register/";
 
     export default {
         name: 'Login',
