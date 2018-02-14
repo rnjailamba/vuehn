@@ -19,6 +19,7 @@
 
     Vue.use(VueSweetalert2);
     var base_url = "https://drfbackend.herokuapp.com/industries/upload";
+    // var base_url = "http://127.0.0.1:8000/industries/upload";
     var allDataCorrect = true; // Flag
     var finalFormattedData = [];
 
@@ -94,7 +95,7 @@
                         if (allDataCorrect) {
                             console.log(finalFormattedData);
                             vm.CSV = finalFormattedData;
-                            vm.showDataParseSuccess(finalFormattedData);
+                            vm.showDataParseSuccess(finalFormattedData);             
                         }
                     }
                 });
@@ -121,10 +122,12 @@
             removeCSV: function(e) {
                 this.CSV = '';
                 allDataCorrect = true;
+                finalFormattedData = [];
             },
             incorrectCSV:function(e){
                 this.CSV = 'Incorrect format';
                 allDataCorrect = false;
+                finalFormattedData = [];
             },
             showDataParseSuccess: function(data) {
                 Vue.swal({
@@ -139,6 +142,7 @@
                     if (result.value) {
                         this.postData(data);
                     }
+                    finalFormattedData = [];
                 });
             }
         }
