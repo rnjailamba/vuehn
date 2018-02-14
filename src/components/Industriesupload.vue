@@ -43,6 +43,7 @@
                 if (!files.length)
                     return;
                 if (files[0].type !== 'text/csv') {
+                    this.incorrectCSV();
                     Vue.swal('Sorry, thats not a valid CSV file');
                     return;
                 }
@@ -68,9 +69,8 @@
                                         'The id column must be number and name column string.',
                                         'error'
                                     )
-                                    allDataCorrect = false;
+                                    vm.incorrectCSV();
                                     parser.abort();
-                                    vm.CSV = '';
                                 } else {
                                     finalFormattedData.push({
                                         id: id,
@@ -82,12 +82,11 @@
                                 //some key is missing, abort parsing
                                 Vue.swal(
                                     'Incorrect Format!',
-                                    'The header must have id|name.',
+                                    'The header must have id|name or id,name.',
                                     'error'
                                 )
-                                allDataCorrect = false;
+                                vm.incorrectCSV();
                                 parser.abort();
-                                vm.CSV = '';
                             }
                         }
                     },
@@ -122,6 +121,10 @@
             removeCSV: function(e) {
                 this.CSV = '';
                 allDataCorrect = true;
+            },
+            incorrectCSV:function(e){
+                this.CSV = 'Incorrect format';
+                allDataCorrect = false;
             },
             showDataParseSuccess: function(data) {
                 Vue.swal({
