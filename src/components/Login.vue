@@ -63,6 +63,7 @@
             addUser: function() {
                 if (this.isValid) {
                     this.loginClick = false;
+                    Vue.swal('Waiting for server response...');
                     axios.post(base_url, JSON.stringify(this.newUser), {
                             headers: {
                                 'Content-Type': 'application/json'
