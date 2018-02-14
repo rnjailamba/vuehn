@@ -12,8 +12,13 @@
     import Item from './Industriesitem.vue';
     import Vue from 'vue'
     import axios from 'axios'
+    import Router from '../router';
+    import VueSweetalert2 from 'vue-sweetalert2';
+
+    Vue.use(VueSweetalert2);
     Vue.component('Item', Item);
     var data = []
+    
     export default {
         components: {
             'item': Item
@@ -27,7 +32,12 @@
             '$route': 'fetchData'
         },
         created() {
-            this.fetchData()
+            if(!localStorage.getItem('token')){
+                Vue.swal('Please Login to upload!');
+                Router.push({ name: 'Login'})
+            }            
+            else
+                this.fetchData()
         },       
         methods: {
             fetchData() {

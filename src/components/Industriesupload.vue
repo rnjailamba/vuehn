@@ -1,11 +1,11 @@
 <template>
     <div id="app">
-        <div v-if="!image">
+        <div v-if="!CSV">
             <h2>Select an CSV file</h2>
             <input type="file" @change="onFileChange">
         </div>
         <div v-else>
-            <button @click="removeImage">Remove CSV file</button>
+            <button @click="removeCSV">Remove CSV file</button>
         </div>
     </div>
 </template>
@@ -15,21 +15,27 @@
   import Vue from 'vue'
   import VueSweetalert2 from 'vue-sweetalert2';
   import axios from 'axios'
-
-  var base_url = "http://127.0.0.1:8000/industries/upload";
-  var base_url = "https://drfbackend.herokuapp.com/industries/upload";
+  import Router from '../router';
 
   Vue.use(VueSweetalert2);
+  var base_url = "http://127.0.0.1:8000/industries/upload";
+  var base_url = "https://drfbackend.herokuapp.com/industries/upload";
   var allDataCorrect = true; // Flag
   var finalFormattedData = [];
+
   export default {
-    name: 'Hello',
+    name: 'Industriesupload',
     data () {
       return {
-        msg: 'Welcome to Crypto Info',
-        image: ''
+        CSV: ''
       }
     },
+    created() {
+      if(!localStorage.getItem('token')){
+        Vue.swal('Please Login to upload!');
+        Router.push({ name: 'Login'})
+      }
+    }, 
     methods: {
         onFileChange(e) {
             var files = e.target.files || e.dataTransfer.files;
@@ -39,9 +45,9 @@
                 Vue.swal('Sorry, thats not a valid CSV file');
                 return;
             }
-            this.createImage(files[0]);
+            this.createCSV(files[0]);
         },
-        createImage(file) {
+        createCSV(file) {
             var vm = this;
             var parsed = Papa.parse(file, {
                 download: true,
@@ -63,7 +69,7 @@
                                 )
                                 allDataCorrect = false;
                                 parser.abort();
-                                vm.image = '';
+                                vm.CSV = '';
                             }
                             else{
                                 finalFormattedData.push({id:id, name:name});
@@ -78,14 +84,14 @@
                             )
                             allDataCorrect = false;
                             parser.abort();
-                            vm.image = '';
+                            vm.CSV = '';
                         }
                     } 
                 },              
                 complete: function(results, file) {
                     if(allDataCorrect){
                         console.log(finalFormattedData);
-                        vm.image = finalFormattedData;
+                        vm.CSV = finalFormattedData;
                         vm.showDataParseSuccess(finalFormattedData);
                     }
                 }
@@ -110,15 +116,19 @@
                 // }
             })
             .then((response) => {
-                dispatch({type: FOUND_USER, data: response.data[0]})
+                 Vue.swal(
+                            'Uploaded!',
+                            'Your file has been uploaded.',
+                            'success'
+                        )
             })
             .catch((error) => {
-                dispatch({type: ERROR_FINDING_USER})
+                
             });
         },
-        removeImage: function (e) {
-            this.image = '';
-            allDataCorrect = false;
+        removeCSV: function (e) {
+            this.CSV = '';
+            allDataCorrect = true;
         },
         showDataParseSuccess: function(data){
             Vue.swal({
@@ -131,11 +141,6 @@
                 confirmButtonText: 'Yes, upload it!'
                 }).then((result) => {
                     if (result.value) {
-                        Vue.swal(
-                            'Uploaded!',
-                            'Your file has been uploaded.',
-                            'success'
-                        )
                         this.postData(data);
                     }
             });            
